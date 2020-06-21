@@ -30,7 +30,7 @@ public class Body{
       dist = Math.sqrt(Math.pow(xxDis,2)+Math.pow(yyDis,2));
       return dist;
    }
-
+   //calculate the compound force between the two Body objects
    public double calcForceExertedBy(Body p){
       double force;
 
@@ -69,7 +69,7 @@ public class Body{
       yyForce = this.calcForceExertedBy(p) * yyDis / this.calcDistance(p);
       return yyForce;
    }
-   
+   //calculate the net force exerted on one Body in one directions 
    public double calcNetForceExertedByX(Body[] allBodys){
       double xxNetForce = 0;
          for (Body p: allBodys){
@@ -107,5 +107,10 @@ public class Body{
       this.xxPos += dt * this.xxVel;
       this.yyPos += dt * this.yyVel;
 
+   }
+//draw individual planet with parameters supplied
+   public void draw(){
+      String filepath = "images/" + this.imgFileName;
+      StdDraw.picture(this.xxPos,this.yyPos,filepath);
    }
 }
