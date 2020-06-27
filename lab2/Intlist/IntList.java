@@ -37,11 +37,16 @@ public class IntList {
      * Returns a list equal to L with all elements squared. Destructive.
      */
     public static void dSquareList(IntList L) {
-
+        if (L == null)
+            return;
+        L.first = L.first * L.first;
+        dSquareList(L.rest);
+        /*
         while (L != null) {
             L.first = L.first * L.first;
             L = L.rest;
         }
+        */
     }
 
     /**
