@@ -25,6 +25,20 @@ public class LinkedListDeque<T> {
         //sentinel = new Node;
     }
 
+    /** constructor: creates an deep copy of the given deque */
+    /** @source J.H */
+    public LinkedListDeque(LinkedListDeque other){
+        sentinel = new Node(null, null,null);
+        sentinel.prev = sentinel;
+        sentinel.next = sentinel;
+        size = 0;
+
+        for(int i = 0; i<other.size(); ++i){
+            addLast((T) other.get(i));
+        }
+
+    }
+
     /** add an item of type T to the front of deque */
     public void addFirst(T item){
         Node temp = sentinel.next;
@@ -106,6 +120,14 @@ public class LinkedListDeque<T> {
         return temp.item;
     }
 
+    public T getRecursive(int index){
+        if (index == 0){
+            return sentinel.next.item;
+        }
+        sentinel.next = sentinel.next.next;
+        return getRecursive(index-1);
+    }
+
 
 
 
@@ -117,6 +139,6 @@ public class LinkedListDeque<T> {
         L.addLast(7);
         L.addFirst(10);
         L.removeLast();
-        L.get(2);
+        System.out.println(L.getRecursive(0));
     }
 }
