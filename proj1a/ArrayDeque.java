@@ -4,15 +4,14 @@ public class ArrayDeque<T> {
     private int nextLast;
     private int nextFirst;
     private int sizeFirst;
-    private int sizeLast;
 
     /** constructor: empty list of arrays */
     public ArrayDeque(){
         size = 0;
         array = (T[]) new Object[8]; //should I initiate a different object length
         nextFirst = array.length - 1;
-        nextLast = 0;
-        sizeFirst = 0;
+        nextLast = (nextFirst + size + 1)%array.length;
+        sizeFirst = array.length - (nextFirst  + 1);
     }
 
     /** constructor: creates a deep copy of the given arraydeque */
@@ -37,73 +36,98 @@ public class ArrayDeque<T> {
     /** resize function to adjust array size according to
      * the length of array correct resizing also needs be `inserted`
      * between the first item and the last item of the array */
-    public void resize(int size) {
-            T[] newArray = (T[]) new Object[size*2];
-            System.arraycopy(array,0, newArray, 0, sizeLast);
-            System.arraycopy(array, size-sizeFirst, newArray, size*2-sizeFirst, sizeFirst);
+    public void resize() {
+        /** expand if array is full */
+        if (size==array.length)
+        {
+            T[] newArray = (T[]) new Object[size * 2];
+            System.arraycopy(array, 0, newArray, 0, size - sizeFirst);
+            System.arraycopy(array, size - sizeFirst, newArray, size * 2 - sizeFirst, sizeFirst);
             array = newArray;
+        }
+        /** shrink if size is less than 25% of length */
+        else if (size < .25 * array.length && array.length > 16 )
+        {
+            T[] newArray = (T[]) new Object[array.length / 2];
+            System.arraycopy(array, 0, newArray, 0, size - sizeFirst);
+            System.arraycopy(array, size - sizeFirst, newArray, array.length / 2 - sizeFirst, sizeFirst);
+            array = newArray;
+        }
     }
 
-    /** wrapper function for position of the previous item */
-    public int positionFirst(){
+
+    /** wrapper function for position of the previous item
+     */
+    public int decrement(int index){
         if (size == 0){
             return 0;
-        } else if (nextFirst == 0) {
-            return nextFirst = array.length - 1; //First wrap to the end of array
+        } else if (index == 0) {
+            return index = array.length - 1; //First wrap to the end of array
         } else {
-            return nextFirst = nextFirst - 1;
+            return index = index - 1;
         }
     }
 
     /** add to the beginning of an array */
     public void addFirst(T item){
-        if (size==array.length) {
-            resize(size);
-         };
+        resize();
         array[nextFirst] = item;
         size += 1;
-        nextFirst = positionFirst();
+        nextFirst = decrement(nextFirst);
         sizeFirst += 1;
     }
 
     /** wrapper function for position of the last item */
-    public int positionLast(){
+    public int increment(int index){
         if (size == 0){
             return 0;
-        } else if (nextLast == array.length - 1){
-            return nextLast = 0;
+        } else if (index == array.length - 1){
+            return index = 0;
         } else {
-            return nextLast += 1;
+            return index += 1;
         }
     }
 
     /** add to the last of an array */
     public void addLast(T item){
-        if (size==array.length) {
-            resize(size);
-        };
+        resize();
         array[nextLast] = item;
         size += 1;
-        nextFirst = positionLast();
-        sizeLast += 1;
+        nextLast = increment(nextLast);
+    }
+    /** get an item at the given index */
+    public T get(int index) {
+        if (index > size - 1)
+            return null;
+        return array[(index+nextFirst+1)%array.length];
     }
 
-    /** remove the first item in the array deque */
-    public T removeFirst(){
-
+    /** remove and return the first item in the array deque */
+    public T removeFirst() {
+        T copy = get(0);
+        nextFirst = increment(nextFirst);
+        array[nextFirst] = null;
+        size -= 1;
+        sizeFirst -= 1;
+        return copy;
     }
 
     /** remove the last item in the array deque */
     public T removeLast(){
-
+        T copy = get(size-1);
+        nextLast = decrement(nextLast);
+        array[nextLast] = null;
+        size -=1;
+        return copy;
     }
 
     /** print array deque */
     public void printDeque() {
-        for (int i = 0; i < sizeLast; ++i) {
+
+        for (int i = increment(nextFirst); i < increment(nextFirst) + sizeFirst; ++i) {
             System.out.print(array[i] + " ");
         }
-        for (int i = array.length - sizeFirst; i < array.length; ++i) {
+        for (int i = 0; i < size - sizeFirst; ++i) {
             System.out.print(array[i] + " ");
         }
         System.out.println();
@@ -119,6 +143,10 @@ public class ArrayDeque<T> {
         L.addLast(17);
         L.addLast(7);
         L.printDeque();
+        L.removeFirst();
+        L.removeLast();
+        L.printDeque();
+        System.out.println(L.get(2));
     }
 
 }
