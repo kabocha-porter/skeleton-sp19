@@ -69,7 +69,7 @@ public class ArrayDeque<T> {
             System.arraycopy(array, size - sizeFirst, newArray, array.length / 2 - sizeFirst, sizeFirst);
             array = newArray;
         }
-        /** if (size==array.length || size < .25 * array.length)
+        /** if (size==array.length)
          *{
          *  T[] newArray = (T[]) new Object[size * 2];
          *  for (int i = 0; i < size; ++i)
@@ -80,13 +80,21 @@ public class ArrayDeque<T> {
          *      array = newArray;
          *      nextFirst = array.length - 1;
          *      nextLast = size;
+         * } else if (size < .25 * array.length)
+         * {
+         *   T[] newArray = (T[]) new Object[size / 2];
+         *
          */
     }
 
 
     /** wrapper function for position of the previous item
      */
-    public int decrement(int index){
+    public int decrement(int index)
+    {
+        return (index + array.length - 1) % array.length;
+    }
+    /**
         if (size == 0){
             return 0;
         } else if (index == 0) {
@@ -95,6 +103,7 @@ public class ArrayDeque<T> {
             return index = index - 1;
         }
     }
+     */
 
     /** add to the beginning of an array */
     public void addFirst(T item){
@@ -135,8 +144,10 @@ public class ArrayDeque<T> {
 
     /** remove and return the first item in the array deque */
     public T removeFirst() {
-        T copy = get(0);
+        if isEmpty()
+                return null;
         nextFirst = increment(nextFirst);
+        T copy = array[nextFirst];
         array[nextFirst] = null;
         size -= 1;
         sizeFirst -= 1;
@@ -144,9 +155,12 @@ public class ArrayDeque<T> {
     }
 
     /** remove the last item in the array deque */
-    public T removeLast(){
-        T copy = get(size-1);
+    public T removeLast()
+    {
+        if (isEmpty())
+            return null;
         nextLast = decrement(nextLast);
+        T copy = array[nextLast];
         array[nextLast] = null;
         size -=1;
         return copy;
@@ -163,6 +177,12 @@ public class ArrayDeque<T> {
         }
         System.out.println();
     }
+     public void printDeque{
+     for (T p : array)
+     {
+     System.out.print(p + " ");
+     }
+     }
      */
 
     /** eliminate sizeFirst and print out according to relative position */
@@ -177,19 +197,19 @@ public class ArrayDeque<T> {
 
     public static void main(String[] args){
         ArrayDeque<Integer> L = new ArrayDeque();
-        L.addFirst(5);
-        L.addFirst(10);
-        L.addFirst(15);
-        L.addFirst(20);
-        L.addLast(27);
-        L.addLast(17);
-        L.addLast(7);
-        L.removeFirst();
-        L.removeLast();
+        int temp;
+        L.addLast(0);
+        L.addLast(1);
+        L.addLast(2);
+        L.addFirst(3);
+        L.addFirst(4);
+        temp = L.removeFirst();
+        System.out.println(temp);
+        L.addLast(6);
+        temp = L.removeLast();
+        System.out.println(temp);
         L.printDeque();
         System.out.println(L.get(0));
-        ArrayDeque<Integer> M = new ArrayDeque(L);
-        M.printDeque();
     }
 
 }
