@@ -144,7 +144,7 @@ public class ArrayDeque<T> {
 
     /** remove and return the first item in the array deque */
     public T removeFirst() {
-        if isEmpty()
+        if(isEmpty())
                 return null;
         nextFirst = increment(nextFirst);
         T copy = array[nextFirst];
