@@ -1,3 +1,10 @@
+/** In this exercise, one needs to be clear about the differences between size/item.length and when to use which.
+ * In fact, the absolute position of the element in the array is less important than the relative position of sequence of
+ * elements. Once clear about it, printDeque and resize can be resolved in a simpler solution. The variable `sizeFirst`
+ * is no longer needed because it denotes absolute position. Another thing to simply the code is to be clear about the
+ * arithmetics of the array index and size.
+ * @param <T>
+ */
 public class ArrayDeque<T> {
     private int size;
     private T[] array;
@@ -8,10 +15,10 @@ public class ArrayDeque<T> {
     /** constructor: empty list of arrays */
     public ArrayDeque(){
         size = 0;
-        array = (T[]) new Object[4]; //should I initiate a different object length
-        nextFirst = array.length - 1;
-        nextLast = (nextFirst + size + 1)%array.length;
-        sizeFirst = array.length - (nextFirst  + 1);
+        array = (T[]) new Object[8]; //should I initiate a different object length
+        nextFirst = 7; //array.length - 1;
+        nextLast = 0; //(nextFirst + size + 1)%array.length;
+        sizeFirst = 0; //array.length - (nextFirst  + 1);
     }
 
     /** constructor: creates a deep copy of the given arraydeque
@@ -122,8 +129,7 @@ public class ArrayDeque<T> {
 
     /** get an item at the given index */
     public T get(int index) {
-        if (index > size - 1)
-            return null;
+
         return array[(index+nextFirst+1)%array.length];
     }
 
@@ -181,7 +187,7 @@ public class ArrayDeque<T> {
         L.removeFirst();
         L.removeLast();
         L.printDeque();
-        System.out.println(L.get(2));
+        System.out.println(L.get(0));
         ArrayDeque<Integer> M = new ArrayDeque(L);
         M.printDeque();
     }
