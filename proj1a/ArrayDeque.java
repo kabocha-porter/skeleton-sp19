@@ -10,7 +10,6 @@ public class ArrayDeque<T> {
     private T[] array;
     private int nextLast;
     private int nextFirst;
-    private int sizeFirst;
 
     /** constructor: empty list of arrays */
     public ArrayDeque(){
@@ -18,7 +17,6 @@ public class ArrayDeque<T> {
         array = (T[]) new Object[8]; //should I initiate a different object length
         nextFirst = 7; //array.length - 1;
         nextLast = 0; //(nextFirst + size + 1)%array.length;
-        sizeFirst = 0; //array.length - (nextFirst  + 1);
     }
 
     /** constructor: creates a deep copy of the given arraydeque
@@ -52,39 +50,47 @@ public class ArrayDeque<T> {
     /** resize function to adjust array size according to
      * the length of array correct resizing also needs be `inserted`
      * between the first item and the last item of the array */
-    public void resize() {
+    public void resize()
+    {
         /** expand if array is full */
-        if (size==array.length)
+
+       /* if (size==array.length)
         {
             T[] newArray = (T[]) new Object[size * 2];
             System.arraycopy(array, 0, newArray, 0, size - sizeFirst);
             System.arraycopy(array, size - sizeFirst, newArray, size * 2 - sizeFirst, sizeFirst);
             array = newArray;
         }
-        /** shrink if size is less than 25% of length */
+        *//** shrink if size is less than 25% of length *//*
         else if (size < .25 * array.length && array.length > 16 )
         {
             T[] newArray = (T[]) new Object[array.length / 2];
             System.arraycopy(array, 0, newArray, 0, size - sizeFirst);
             System.arraycopy(array, size - sizeFirst, newArray, array.length / 2 - sizeFirst, sizeFirst);
             array = newArray;
-        }
-        /** if (size==array.length)
-         *{
-         *  T[] newArray = (T[]) new Object[size * 2];
-         *  for (int i = 0; i < size; ++i)
-         *      {
-         *          newArray[i] = addLast((T) get(i));
-         *      }
-         * }
-         *      array = newArray;
-         *      nextFirst = array.length - 1;
-         *      nextLast = size;
-         * } else if (size < .25 * array.length)
-         * {
-         *   T[] newArray = (T[]) new Object[size / 2];
-         *
-         */
+        }*/
+        /** the assignment operator here is probably not the best solution, could us arraycopy instead */
+        if (size==array.length)
+         {
+             T[] newArray = (T[]) new Object[size * 2];
+           for (int i = 0; i < size; ++i)
+               {
+                   newArray[i] = get(i);
+               }
+           array = newArray;
+           nextFirst = array.length - 1;
+           nextLast = size;
+         } else if (size < .25 * array.length && array.length > 16)
+         {
+            T[] newArray = (T[]) new Object[array.length / 2];
+            for (int i = 0; i < size; ++i)
+            {
+                newArray[i] = get(i);
+            }
+            array = newArray;
+            nextFirst = array.length - 1;
+            nextLast = size;
+         }
     }
 
 
@@ -111,7 +117,6 @@ public class ArrayDeque<T> {
         array[nextFirst] = item;
         size += 1;
         nextFirst = decrement(nextFirst);
-        sizeFirst += 1;
     }
 
     /** wrapper function for position of the last item */
@@ -146,11 +151,11 @@ public class ArrayDeque<T> {
     public T removeFirst() {
         if(isEmpty())
                 return null;
+        resize();
         nextFirst = increment(nextFirst);
         T copy = array[nextFirst];
         array[nextFirst] = null;
         size -= 1;
-        sizeFirst -= 1;
         return copy;
     }
 
@@ -159,6 +164,7 @@ public class ArrayDeque<T> {
     {
         if (isEmpty())
             return null;
+        resize();
         nextLast = decrement(nextLast);
         T copy = array[nextLast];
         array[nextLast] = null;
@@ -197,17 +203,39 @@ public class ArrayDeque<T> {
 
     public static void main(String[] args){
         ArrayDeque<Integer> L = new ArrayDeque();
-        int temp;
-        L.addLast(0);
-        L.addLast(1);
-        L.addLast(2);
-        L.addFirst(3);
-        L.addFirst(4);
-        temp = L.removeFirst();
-        System.out.println(temp);
-        L.addLast(6);
-        temp = L.removeLast();
-        System.out.println(temp);
+
+        for (int i = 0; i < 30; ++i)
+        {
+            L.addLast(i);
+        }
+        L.addFirst(10);
+        L.addFirst(10);
+        L.addFirst(10);
+        L.addLast(30);
+        L.addLast(30);
+        L.printDeque();
+        for (int i = 0; i < 3; ++i)
+        {
+            L.removeFirst();
+        }
+        L.printDeque();
+        L.addFirst(10);
+        L.addFirst(10);
+        L.addFirst(10);
+        for (int i  = 0; i < 23; ++i)
+        {
+            L.removeLast();
+        }
+        L.printDeque();
+        for (int i = 0; i < 10; ++i)
+        {
+            L.addLast(i);
+        }
+        L.printDeque();
+        for (int i = 0; i < 20; ++i)
+        {
+            L.removeFirst();
+        }
         L.printDeque();
         System.out.println(L.get(0));
     }
