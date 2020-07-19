@@ -13,7 +13,7 @@ public class Palindrome {
     }
 
     private boolean isPalindrome(Deque t) {
-        if (t.isEmpty())
+        if (t.isEmpty()||t.size() == 1)
             return true;
         if(t.removeFirst()!=t.removeLast())
             return false;
@@ -24,6 +24,23 @@ public class Palindrome {
     public boolean isPalindrome(String word) {
         Deque x = wordToDeque(word);
         return isPalindrome(x);
+    }
+
+
+    /**
+     * return true if the word is a off-by-one palindrome, without recursion
+     * @source kevin chang
+     */
+    public boolean isPalindrome(String word, CharacterComparator cc){
+        Deque<Character> x = wordToDeque(word);
+        if (x.isEmpty()||x.size() == 1)
+            return true;
+        while(cc.equalChars(x.removeFirst(), x.removeLast()))
+        {
+            if (x.size() <= 1)
+                return true;
+        }
+        return false;
     }
 
 

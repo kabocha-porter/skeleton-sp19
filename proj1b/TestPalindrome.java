@@ -19,7 +19,17 @@ public class TestPalindrome {
     @Test
     public void testIsPalindrome(){
         assertFalse(palindrome.isPalindrome("fine"));
-        assertTrue(palindrome.isPalindrome("abba"));
+        assertFalse(palindrome.isPalindrome("ababa"));
     }
 
+    static CharacterComparator cc = new OffByN(5);
+    @Test
+    public void testOffByOne(){
+        assertTrue(palindrome.isPalindrome("sworn", cc));
+        assertFalse(palindrome.isPalindrome("fake",cc));
+        assertTrue(palindrome.isPalindrome("a",cc));
+        assertFalse(palindrome.isPalindrome("flake",cc));
+        assertFalse(palindrome.isPalindrome("pedal",cc));
+
+    }
 }
