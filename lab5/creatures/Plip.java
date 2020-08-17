@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Map;
 
+import static huglife.HugLifeUtils.randomEntry;
+
 /**
  * An implementation of a motile pacifist photosynthesizer.
  *
@@ -117,11 +119,13 @@ public class Plip extends Creature {
     /**
      * Select a direction from an arraydeque at random
      */
+    /*
     public Direction randomEntry(ArrayList<Direction> neighbors)
     {
         int r =  ((int)(Math.random() * 10)) % neighbors.size();
         return neighbors.get(r);
     }
+    */
 
     /**
      * Plips take exactly the following actions based on NEIGHBORS:
@@ -138,14 +142,13 @@ public class Plip extends Creature {
      */
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
         // Rule 1
-        ArrayList<Direction> emptyNeighbors = new ArrayList<>();
-        // Change ArrayDeque(), which is provided in the starter's code to ArraySet() to accommodate randomeEntry()
+        Deque<Direction> emptyNeighbors = new ArrayDeque<>();
 
         boolean anyClorus = false;
         // TODO
         // (Google: Enhanced for-loop over keys of NEIGHBORS?)
         // for () {...}
-        for (Direction i : Direction.values())//does direction supports iterable()?
+        for (Direction i : Direction.values())
         {
             if(neighbors.get(i).name().equals("empty"))
             {
