@@ -88,6 +88,8 @@ public class SampleCreature extends Creature {
      * Nothing special happens when a SampleCreature moves.
      */
     public void move() {
+
+
     }
 
     /**

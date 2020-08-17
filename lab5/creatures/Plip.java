@@ -7,6 +7,7 @@ import huglife.Occupant;
 
 import java.awt.Color;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Map;
 
@@ -57,7 +58,16 @@ public class Plip extends Creature {
      * that you get this exactly correct.
      */
     public Color color() {
-        g = 63;
+        if(energy == 0)
+            g = 63;
+        else if(energy == 2)
+            g = 255;
+        else
+            g = (int) Math.ceil(energy * 96);
+
+        r = 99;
+        b = 76;
+
         return color(r, g, b);
     }
 
@@ -74,7 +84,12 @@ public class Plip extends Creature {
      * private static final variable. This is not required for this lab.
      */
     public void move() {
+        //private static final variable?
         // TODO
+        energy = energy - 0.15;
+        if (energy < 0)
+            energy = 0;
+
     }
 
 
@@ -83,6 +98,9 @@ public class Plip extends Creature {
      */
     public void stay() {
         // TODO
+        energy = energy + 0.2;
+        if (energy>2)
+            energy = 2;
     }
 
     /**
@@ -91,7 +109,18 @@ public class Plip extends Creature {
      * Plip.
      */
     public Plip replicate() {
-        return this;
+        energy = this.energy/2;
+        Plip q = new Plip(energy);
+        return q;
+    }
+
+    /**
+     * Select a direction from an arraydeque at random
+     */
+    public Direction randomEntry(ArrayList<Direction> neighbors)
+    {
+        int r =  ((int)(Math.random() * 10)) % neighbors.size();
+        return neighbors.get(r);
     }
 
     /**
@@ -109,20 +138,44 @@ public class Plip extends Creature {
      */
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
         // Rule 1
-        Deque<Direction> emptyNeighbors = new ArrayDeque<>();
+        ArrayList<Direction> emptyNeighbors = new ArrayList<>();
+        // Change ArrayDeque(), which is provided in the starter's code to ArraySet() to accommodate randomeEntry()
+
         boolean anyClorus = false;
         // TODO
         // (Google: Enhanced for-loop over keys of NEIGHBORS?)
         // for () {...}
+        for (Direction i : Direction.values())//does direction supports iterable()?
+        {
+            if(neighbors.get(i).name().equals("empty"))
+            {
+                emptyNeighbors.add(i);
+            }
+            if(neighbors.get(i).name().equals("clorus"))
+            {
+                anyClorus = true;
+            }
+        }
 
-        if (false) { // FIXME
-            // TODO
+        if (emptyNeighbors.isEmpty()) {
+            return new Action(Action.ActionType.STAY);
         }
 
         // Rule 2
         // HINT: randomEntry(emptyNeighbors)
+        else if (energy >= 1.0)
+        {
+            return new Action(Action.ActionType.REPLICATE, randomEntry(emptyNeighbors));
+        }
 
         // Rule 3
+        else if (anyClorus)
+        {
+            if(Math.random()>.5)
+            {
+                return new Action(Action.ActionType.MOVE, randomEntry(emptyNeighbors));
+            }
+        }
 
         // Rule 4
         return new Action(Action.ActionType.STAY);
